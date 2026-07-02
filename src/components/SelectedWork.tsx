@@ -71,7 +71,7 @@ export function SelectedWork() {
               <span className="font-mono text-xs text-text-muted">
                 motion preview
               </span>
-              <span className="absolute inset-0 flex items-center justify-center bg-text/0 font-sans text-sm font-medium text-bg opacity-0 transition-opacity ease-house duration-300 group-hover:bg-text/60 group-hover:opacity-100">
+              <span className="absolute inset-0 flex items-center justify-center bg-text/0 font-sans text-sm font-medium text-bg opacity-0 transition-opacity ease-house duration-300 group-hover:bg-text/70 group-hover:opacity-100">
                 View the live experience
               </span>
             </div>
