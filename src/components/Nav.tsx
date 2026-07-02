@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { LinkButton } from "@/components/ui/Button";
 
@@ -8,12 +11,27 @@ const links = [
 ];
 
 export function Nav() {
+  const [condensed, setCondensed] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setCondensed(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-bg">
+    <header
+      className={`sticky top-0 z-50 bg-bg/90 backdrop-blur transition-all ease-house duration-300 ${
+        condensed ? "border-b border-border" : "border-b border-transparent"
+      }`}
+    >
       <Container>
         <nav
           aria-label="Primary"
-          className="flex items-center justify-between py-6"
+          className={`flex items-center justify-between transition-all ease-house duration-300 ${
+            condensed ? "py-4" : "py-6"
+          }`}
         >
           <a
             href="#top"
