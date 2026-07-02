@@ -6,22 +6,22 @@ import { ClpPreviewLoop } from "@/components/ClpPreviewLoop";
 
 const supportingProjects = [
   {
-    title: "Micro-frontend multi-form platform",
+    title: "Insurance micro-frontend platform",
     description:
-      "Composed a multi-step form flow from independently deployed micro-frontends sharing a single validation and state contract.",
-    tags: ["React", "TypeScript", "Micro-frontend"],
+      "Six independently deployable micro-frontends via Webpack Module Federation, sharing one Redux store — plus a WCAG AAA audit (40+ issues fixed) and 200+ tests at 85% coverage.",
+    tags: ["React", "Redux", "Module Federation"],
   },
   {
-    title: "CMS-migration React rebuild",
+    title: "Bank marketing site migration",
     description:
-      "Migrated a legacy CMS-driven page suite to a componentized React front end without a content or SEO regression.",
-    tags: ["React", "TypeScript", "AEM"],
+      "Migrated a bank's CC & loan landing pages to React incrementally — an API-driven rate comparison table and a custom-validated eligibility calculator, mounted into the existing pages.",
+    tags: ["React", "REST APIs", "Incremental migration"],
   },
   {
     title: "Partner Portal",
     description:
-      "Built the partner-facing dashboard for onboarding and account management, from data layer to production UI.",
-    tags: ["React", "TypeScript", "REST"],
+      "Data-driven portal for Palo Alto Networks' partners — Redux Toolkit and RTK Query cut page interaction latency 30% through cache reuse and memoized selectors.",
+    tags: ["React", "Redux Toolkit", "RTK Query"],
   },
 ];
 
