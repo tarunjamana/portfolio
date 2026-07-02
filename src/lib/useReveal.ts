@@ -30,7 +30,7 @@ export function useReveal<T extends HTMLElement>(order = 0) {
         },
       );
     },
-    { dependencies: [reducedMotion] },
+    { dependencies: [reducedMotion], revertOnUpdate: true },
   );
 
   return ref;

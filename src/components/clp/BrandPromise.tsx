@@ -43,7 +43,7 @@ export function BrandPromise() {
         tl.to(el, { opacity: 1, y: 0, ease: "tb-house" }, i === 0 ? 0 : "<");
       });
     },
-    { dependencies: [reducedMotion], scope: sectionRef },
+    { dependencies: [reducedMotion], scope: sectionRef, revertOnUpdate: true },
   );
 
   return (

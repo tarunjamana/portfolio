@@ -40,7 +40,7 @@ export function ParallaxMoment() {
         { y: -20, ease: "none", scrollTrigger },
       );
     },
-    { dependencies: [reducedMotion], scope: sectionRef },
+    { dependencies: [reducedMotion], scope: sectionRef, revertOnUpdate: true },
   );
 
   return (

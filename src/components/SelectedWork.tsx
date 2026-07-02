@@ -2,6 +2,7 @@
 
 import { Container } from "@/components/ui/Container";
 import { useReveal } from "@/lib/useReveal";
+import { ClpPreviewLoop } from "@/components/ClpPreviewLoop";
 
 const supportingProjects = [
   {
@@ -68,9 +69,7 @@ export function SelectedWork() {
             className="group grid overflow-hidden rounded-house border border-border bg-surface transition-colors ease-house duration-300 hover:border-border-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:grid-cols-2"
           >
             <div className="relative order-2 flex aspect-video items-center justify-center bg-accent-tint md:order-1 md:aspect-auto">
-              <span className="font-mono text-xs text-text-muted">
-                motion preview
-              </span>
+              <ClpPreviewLoop />
               <span className="absolute inset-0 flex items-center justify-center bg-text/0 font-sans text-sm font-medium text-bg opacity-0 transition-opacity ease-house duration-300 group-hover:bg-text/70 group-hover:opacity-100">
                 View the live experience
               </span>

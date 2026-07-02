@@ -46,7 +46,7 @@ export function Hero() {
         yoyo: true,
       });
     },
-    { dependencies: [reducedMotion], scope: containerRef },
+    { dependencies: [reducedMotion], scope: containerRef, revertOnUpdate: true },
   );
 
   return (
