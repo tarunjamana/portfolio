@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useReducedMotion } from "@/lib/reduced-motion";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export function SmoothScroll() {
   const { reducedMotion } = useReducedMotion();

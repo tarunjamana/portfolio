@@ -1,4 +1,7 @@
+"use client";
+
 import { Container } from "@/components/ui/Container";
+import { useReveal } from "@/lib/useReveal";
 
 const supportingProjects = [
   {
@@ -21,7 +24,36 @@ const supportingProjects = [
   },
 ];
 
+function ProjectCard({
+  project,
+  order,
+}: {
+  project: (typeof supportingProjects)[number];
+  order: number;
+}) {
+  const ref = useReveal<HTMLDivElement>(order);
+
+  return (
+    <div
+      ref={ref}
+      className="flex flex-col gap-3 rounded-house border border-border bg-surface p-6"
+    >
+      <h3 className="font-display text-lg font-semibold text-text">
+        {project.title}
+      </h3>
+      <p className="font-sans text-sm text-text-secondary">
+        {project.description}
+      </p>
+      <p className="font-mono text-xs text-text-muted">
+        {project.tags.join(" · ")}
+      </p>
+    </div>
+  );
+}
+
 export function SelectedWork() {
+  const featuredRef = useReveal<HTMLAnchorElement>(0);
+
   return (
     <section id="work" className="py-24">
       <Container>
@@ -31,6 +63,7 @@ export function SelectedWork() {
 
         <div className="mt-10 flex flex-col gap-6">
           <a
+            ref={featuredRef}
             href="/work/clp"
             className="group grid overflow-hidden rounded-house border border-border bg-surface transition-colors ease-house duration-300 hover:border-border-strong focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:grid-cols-2"
           >
@@ -59,21 +92,8 @@ export function SelectedWork() {
           </a>
 
           <div className="grid gap-6 md:grid-cols-3">
-            {supportingProjects.map((project) => (
-              <div
-                key={project.title}
-                className="flex flex-col gap-3 rounded-house border border-border bg-surface p-6"
-              >
-                <h3 className="font-display text-lg font-semibold text-text">
-                  {project.title}
-                </h3>
-                <p className="font-sans text-sm text-text-secondary">
-                  {project.description}
-                </p>
-                <p className="font-mono text-xs text-text-muted">
-                  {project.tags.join(" · ")}
-                </p>
-              </div>
+            {supportingProjects.map((project, i) => (
+              <ProjectCard key={project.title} project={project} order={i} />
             ))}
           </div>
         </div>

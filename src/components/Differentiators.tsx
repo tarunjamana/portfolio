@@ -1,11 +1,17 @@
+"use client";
+
 import { Container } from "@/components/ui/Container";
+import { useReveal } from "@/lib/useReveal";
 
 export function Differentiators() {
+  const accessibilityRef = useReveal<HTMLDivElement>(0);
+  const measurementRef = useReveal<HTMLDivElement>(1);
+
   return (
     <section className="py-32">
       <Container>
         <div className="grid gap-16 md:grid-cols-2 md:gap-12">
-          <div className="flex flex-col gap-4">
+          <div ref={accessibilityRef} className="flex flex-col gap-4">
             <h3 className="font-display text-3xl font-semibold text-text">
               Accessible by default.
             </h3>
@@ -15,7 +21,7 @@ export function Differentiators() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div ref={measurementRef} className="flex flex-col gap-4">
             <h3 className="font-display text-3xl font-semibold text-text">
               Built to be measured.
             </h3>
