@@ -47,6 +47,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ReducedMotionProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-house focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-bg focus:outline-2 focus:outline-offset-2 focus:outline-accent-hover"
+          >
+            Skip to content
+          </a>
           <SmoothScroll />
           <ScrollProgress />
           <Nav />

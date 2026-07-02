@@ -4,7 +4,7 @@ import { Differentiators } from "@/components/Differentiators";
 
 export default function Home() {
   return (
-    <main className="flex-1">
+    <main id="main-content" className="flex-1">
       <Hero />
       <SelectedWork />
       <Differentiators />

@@ -22,6 +22,7 @@ export function Nav() {
 
   return (
     <header
+      id="top"
       className={`sticky top-0 z-50 bg-bg/90 backdrop-blur transition-all ease-house duration-300 ${
         condensed ? "border-b border-border" : "border-b border-transparent"
       }`}
@@ -35,7 +36,7 @@ export function Nav() {
         >
           <a
             href="#top"
-            className="font-display text-lg font-semibold text-text"
+            className="font-display text-lg font-semibold text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             Tarun<span className="text-accent">.</span>
           </a>
