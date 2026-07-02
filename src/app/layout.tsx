@@ -3,6 +3,8 @@ import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { ReducedMotionProvider } from "@/lib/reduced-motion";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -43,10 +45,13 @@ export default function RootLayout({
       className={`${bricolage.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Nav />
-        {children}
-        <Footer />
-        <Analytics />
+        <ReducedMotionProvider>
+          <SmoothScroll />
+          <Nav />
+          {children}
+          <Footer />
+          <Analytics />
+        </ReducedMotionProvider>
       </body>
     </html>
   );

@@ -1,0 +1,476 @@
+# CLAUDE.md — tarunjamana.dev portfolio (build spec)
+
+> Read this at the start of every session. It is the complete, decided spec for the build.
+> Strategy, structure, visual system, and per-section behaviour are all locked below unless a
+> line is explicitly marked **TBD**. If a choice isn't in this file, it hasn't been decided —
+> surface it, don't invent it.
+
+---
+
+## 1. Purpose & strategy (the why behind every decision)
+
+This site is a **work-sample for the Amazon Brand Innovation Lab (BIL) India — Design
+Technologist role.** BIL ships scroll-driven, animated, pixel-faithful branded landing pages.
+So the site isn't a portfolio that *describes* the skill — it's built to *be* the skill on
+display. Audience: a BIL hiring manager who opens the live URL on a phone and spends ~30
+seconds before deciding.
+
+- **The claim (what the site must land):** a rare developer who pairs resonant design with
+  production-grade code to back it up.
+- **The feeling (governs every visual/motion choice):** precise, calm, in control. When a
+  choice feels flashy, it's probably wrong — reach for confident restraint.
+- **Primary goal / one action:** the résumé download. Everything is arranged to build enough
+  conviction that grabbing the résumé feels obvious. Contact is secondary.
+- **Headline (locked, exact):** "Web experiences that resonate. Engineered to be fast,
+  accessible, and measured."
+- **Governing principle:** *demonstrate, don't assert.* Never write "I'm great at motion" —
+  the page moves well and that is the proof. Every element must be showing, not telling.
+- **The two differentiators (Tarun's real edges, both in the JD's preferred column):**
+  accessibility (WCAG AAA background) and measurement (A/B + multivariate testing, analytics).
+  Most motion-first applicants have neither. They must surface in the content, not be buried.
+- **Honesty / scoping (hard rule):** no overclaims, no soft metrics he can't defend. Client
+  work (AEM, Adobe, Palo Alto) is real experience he can *describe*, but the actual pages,
+  code, brand assets, and screenshots are **not his to publish**. Anything shown must be his
+  own clean-room work.
+
+---
+
+## 2. Working contract (how to help during the build)
+
+Tarun is a senior front-end engineer (React/TS, 6.5 yrs) building this to *own* it — he'll
+defend these decisions in interview, so he must understand them.
+
+**Default mode — handhold and verify (this is how the build runs):**
+- **Tell Tarun the exact next action, one step at a time.** Say precisely what to do (which
+  file, which command, what to write) — clear enough that he can execute it — then **stop and
+  wait.** He does it, reports back, and you **verify** what he did before giving the next step.
+- Keep steps small and single-purpose. Don't dump five steps at once; give one, confirm it
+  landed, move on. This is the same loop we used in the design phase.
+- When you verify, be concrete: point out what's right, what's off, and the fix — especially on
+  the role-critical parts (GSAP/ScrollTrigger choreography, Figma-to-code fidelity, performance,
+  accessibility). Honesty over praise: if a scroll janks or a contrast ratio fails, say so.
+
+**Explicit-completion exception (overrides the default):**
+- When Tarun explicitly asks you to complete/write/do something ("just write it", "do this for
+  me", "complete this"), **do it directly and fully** — no step-by-step handholding for that
+  item. Honour it immediately.
+
+**Move fast on styling (his stated preference — don't over-invest in CSS):**
+- Keep styling velocity high. Tailwind utilities + the design tokens (§4) only — **no separate
+  CSS files, no CSS modules, no bespoke hand-written CSS** except where a signature effect
+  genuinely needs it. Reach for utility classes and token one-liners; don't hand-craft.
+- Don't pixel-bikeshed the non-signature surfaces — "good and consistent" is the bar for the
+  frame's plumbing. **Spend the saved effort on the motion layer and the CLP** — the parts that
+  actually win BIL. That's the one caveat to "go fast": the signature motion and the CLP still
+  get real craft; everything else stays quick and utility-driven.
+
+**Always watch his known bug patterns in review:** async exit-path tracing, TypeScript
+nullability imprecision, cleanup discipline (kill/revert every GSAP ScrollTrigger + Lenis
+instance on unmount — most likely to bite in a motion-heavy build), and reading TS errors from
+the innermost mismatch outward.
+
+> The ordered build sequence to walk him through, step by step, is in **§11 (step-wise build
+> plan)**.
+
+---
+
+## 3. Tech stack (decided)
+
+- **Framework:** Next.js (App Router) + TypeScript.
+- **Styling:** Tailwind CSS. The `tailwind.config` theme is generated from the design tokens
+  in §4 and is the single source of truth — no ad-hoc hex or magic numbers in components.
+- **Scroll/story animation:** GSAP + ScrollTrigger via the `@gsap/react` `useGSAP()` hook.
+  (GSAP is 100% free since 2025 — all plugins, public `npm i gsap`, no Club license.)
+- **Smooth scroll:** Lenis, wired to ScrollTrigger.
+- **Component micro-interactions / small transitions:** Framer Motion (Motion).
+- **Fonts:** `next/font` (self-hosted, subset, `display: swap`) — see §4.
+- **Analytics:** Vercel Analytics (one line). Doubles as a talking point for the measurement
+  identity.
+- **Hosting:** Vercel. **No AWS** — S3 and Lambda were dropped (Vercel serves all assets; no
+  contact form means no serverless backend). Fully static/edge-rendered on Vercel.
+- **No MDX / no case-study sub-pages** for the three supporting projects (they don't link
+  out — see §6). The CLP is its own bespoke route, not MDX.
+
+---
+
+## 4. Visual system & design tokens
+
+All values below are the locked *starting* tokens. Exact hex can be fine-tuned in-build, but
+the intent (warm off-white base, warm-grey neutrals, one deep muted teal, humanist type,
+calm motion) is fixed. Express every value as a token (CSS custom property + Tailwind theme
+entry); nothing hardcoded in components.
+
+### Colour — warm, light, one accent used sparingly
+```
+--bg            #F8F5EF   /* warm off-white "paper" base — NOT clinical white, NOT beige */
+--surface       #FFFFFF   /* cards/raised surfaces, or a hair warmer than bg */
+--text          #2A2723   /* warm near-black — primary text */
+--text-secondary #6B655C  /* warm grey — supporting text */
+--text-muted    #9A9389   /* warm grey — hints, captions, tags */
+--border        rgba(42,39,35,0.10)   /* warm hairline */
+--border-strong rgba(42,39,35,0.18)
+--accent        #1E5F57   /* deep, muted pine teal — the ONE accent */
+--accent-hover  #174A44
+--accent-tint   rgba(30,95,87,0.08)   /* focus/hover washes */
+```
+**Accent budget — the accent is a guest, not a resident.** Teal appears only on: the résumé
+button, links, and at most one hover state. Everywhere else is warm-neutral. If teal shows up
+in 5+ places, it's wrong.
+
+**Contrast is non-negotiable** (it's the a11y claim): every text/background pair must pass WCAG
+AA minimum. Verify `--text-secondary` and `--text-muted` on `--bg`, and teal-as-link on `--bg`,
+during build.
+
+### Typography — humanist warmth (display), invisible clarity (body)
+- **Display** (headline, section headings): **Bricolage Grotesque** — humanist warmth, subtle
+  character, still calm. Weights 400/500/600.
+- **Body** (descriptions, UI, everything read): **Inter** — max legibility/accessibility, gets
+  out of the way. Weights 400/500.
+- **Mono** (tags, small technical labels only): **JetBrains Mono** — a quiet engineered wink
+  reinforcing the measurement identity.
+- Two-face rule: display + body do the work; mono is a detail accent only. Load all three via
+  `next/font` (self-host, subset, `font-display: swap`) to keep character *and* the Lighthouse
+  score — no layout shift.
+
+### Spacing — 8px scale, balanced rhythm
+Scale: `8 / 16 / 24 / 32 / 48 / 64`. **Loose between major sections** (each section is its own
+moment and breathes), **snug within components** (card padding, element gaps). Balanced, not
+airy, not cramped.
+
+### Layout container
+Contained, centred column with a max-width (~1080–1120px) and side padding (24px mobile,
+scaling up on larger screens). The *same* container governs every section — that shared
+column is the page's visual through-line. Never let content run edge-to-edge on wide screens.
+
+### Motion feel + easing (motion is central — this is the personality)
+- **Feel:** calm, long, settling. Gentle fades and short rises for entrances; smooth scrubbed
+  scroll effects; **no** fly-ins, no bounce, no snap. Confident enough not to show off.
+- **House easing (locked, single curve everywhere):** `cubic-bezier(0.22, 1, 0.36, 1)`.
+  Store as `--ease` and reference it on every transition/reveal/hover/GSAP tween. Nothing ever
+  falls back to the browser default `ease`.
+
+### Responsive breakpoints
+Mobile-first. Primary breakpoints: `md` 768px, `lg` 1024px. Every section's mobile behaviour is
+specified per-section in §6.
+
+---
+
+## 5. The signature element — motion made visible
+
+The one memorable thing, and it grows directly from Tarun's identity: **motion that shows its
+own discipline.** Two parts, tied together with the teal accent so they read as one system:
+
+1. **Scroll-progress indicator** — a *whisper-thin* teal line (top of viewport) that fills with
+   scroll depth. Measurement, made visible. Must stay a whisper — thin, quiet, precise. If it
+   gets thick or flashy it contradicts the "calm/in-control" feeling it exists to prove.
+2. **Reduced-motion toggle** — a real, first-class, *visible* control (lives in the footer). It
+   **must actually disable the motion**, and the site must **also** honour the OS
+   `prefers-reduced-motion` setting independently. A signature built on accessibility that
+   isn't genuinely accessible is the one flaw that undoes the whole pitch. Build it for real.
+
+---
+
+## 6. Section-by-section spec (the portfolio frame)
+
+Order top to bottom: **sticky nav → hero → selected work → differentiators band → footer.**
+All sections share the container from §4.
+
+### 6.1 Sticky nav
+- **Structure:** wordmark left ("Tarun." — teal full-stop is an acceptable single accent use);
+  right side: quiet text links (`Work`, `About`, `Contact`) that anchor-scroll to sections,
+  plus the résumé CTA.
+- **Styling:** links are quiet neutral text; the **résumé button is the one filled element**
+  (teal fill, off-white label, download icon) — visually dominant, the eye always finds it.
+- **Functionality:** sticky/fixed to top; condenses subtly on scroll (e.g. reduced height /
+  faint bottom border / slight background blur once past the hero). Smooth-scroll on anchor
+  links, offset for the sticky bar.
+- **Responsive:** on mobile, collapse the three text links into a menu (or drop to just the
+  résumé button + a minimal menu); résumé stays visible at all widths.
+- **A11y:** `<nav aria-label>`, real anchor links, visible focus-visible states, keyboard order
+  logical.
+
+### 6.2 Hero
+- **Structure:** contained column with side padding. Weighty, **left-aligned** headline
+  (dominant element on the page). The one human **about line** sits *below* it as a supporting
+  subline. **No hero CTA** (résumé already persistent in nav).
+- **Background motion:** subtle, contained **to the hero only**, sitting **behind a
+  semi-opaque overlay** so the foreground text always wins on contrast. Ambient, low-contrast,
+  slow — atmosphere, not a competing animation.
+- **Fold strategy:** deliberately let the top of Selected Work **peek above the fold** to bait
+  the scroll.
+- **Styling:** headline in Bricolage, large, high weight; subline in Inter, secondary colour.
+- **Motion:** gentle entrance (fade + short rise on load, house easing). Respect reduced motion.
+- **Responsive:** headline scales down (`clamp()`); stays left-aligned; overlay/motion perf-safe
+  on mobile.
+
+### 6.3 Selected work (the heaviest section — this is the proof)
+- **Section heading:** short text heading "Selected work".
+- **Project order (locked):** (1) **spec CLP — featured**, (2) micro-frontend multi-form
+  project, (3) CMS-migration React work, (4) Partner Portal. Learning projects (social feed,
+  guest-entry) are **cut** — no weak projects.
+
+**Featured CLP card (the headline act — must read as unequal to the rest):**
+- **Structure:** full-width card. Desktop: **text left** (heading + description), **motion
+  preview right**. Mobile: **preview on top, heading + description below.**
+- **Preview:** a lightweight, muted, **lazy-loaded** motion loop (shows the scroll craft — not
+  a frozen frame). Keep it perf-safe (small file, `loading="lazy"`, poster).
+- **Functionality:** the **whole card is a real link** to the CLP route — clickable by mouse,
+  tap, and keyboard (Tab + Enter). The hover overlay (dims preview, reveals a "view the live
+  experience" affordance) is a **pointer-only enhancement, never the sole path in.**
+- **Styling:** larger, more prominent than the three below; a small "Featured · concept" tag.
+
+**Three supporting cards:**
+- **Structure:** heading + one-line description + a **high-level tag row** (3–4 tags max,
+  e.g. `React · TypeScript · Micro-frontend`). Desktop: three in a row. Mobile: stacked column.
+- **Functionality — important:** these are client-facing work, so they **do not link
+  anywhere.** Therefore they **must not look clickable** — no hover-lift, no pointer cursor, no
+  "read more". They are calm, static, informational tiles. The visible contrast (alive
+  clickable CLP vs. quiet static three) reinforces the CLP as the headline.
+- **Copy note:** since there's no link, the **description carries all the credibility** — each
+  must state concrete, specific scope/outcome, never "worked on various features." (Copy TBD at
+  content stage, grounded in real, defensible history.)
+
+### 6.4 Differentiators band (accessibility + measurement)
+- **Structure:** **no section header.** Two side-by-side columns: left = accessibility, right =
+  measurement. Each = a strong heading + **one tight sentence.**
+- **Styling:** **calm**, not flashy — the form must match the message (discipline). Prominence
+  comes from **generous whitespace + type scale**, not a label. Lots of breathing room above and
+  below so it stands alone as its own moment.
+- **Responsive:** two columns stack on mobile.
+- **Why it's placed here:** it lands *after* the proof, so the two claims read as the
+  through-line of everything above rather than empty assertions — the last conviction-builder
+  before the ask.
+
+### 6.5 Footer (final conversion point)
+- **Structure:** three links (LinkedIn, GitHub, `mailto:` email) on the left; **résumé button
+  repeated** on the right; the **reduced-motion toggle** below-right. **No closing line** — go
+  straight to links. **No contact form.**
+- **Styling:** résumé button is again the one filled/dominant element (max-conviction moment);
+  the three links are quiet. Reduced-motion toggle small and honest, with a state label
+  (e.g. "reduced motion · off/on").
+- **GitHub caveat (build task):** GitHub must not be a ghost town before linking — this repo
+  (and the CLP) should live there, clean and public, so a curious engineer sees real code.
+- **A11y:** toggle is a real `button` with `aria-pressed`; links have discernible names.
+
+---
+
+## 7. The CLP page — centrepiece exhibit (fictional brand: TIMBRE)
+
+**Status: fully specced.** Build the frame (§6) first — it establishes the tokens, motion
+system, and engineering standards — then build the CLP inheriting that *engineering* DNA while
+wearing its own *brand skin*.
+
+### 7.1 Concept & honesty
+- **Standalone route** (`/work/clp`), linked from the featured card; a full scroll-driven
+  experience the visitor moves through, then returns to the portfolio.
+- **Clean-room, fictional brand — TIMBRE**, a premium wireless audio brand (flagship product:
+  *Studio One* over-ear headphones). No real brand IP, logos, or copied code.
+- **Tagged clearly as a concept/spec build**, and its CTA is non-transacting (it's a
+  demonstration, not a store).
+- Rooted honestly in Tarun's **real AEM custom interactive-component work** (authored
+  hero/carousel components with custom authoring). The *skill* is real and shipped; *this page*
+  is a fresh demonstration. Keep that distinction clean in copy. (Thematic bonus, not required:
+  an audio brand about *resonance* quietly echoes the portfolio headline "experiences that
+  resonate.")
+
+### 7.2 Why its own identity (design rationale — be able to defend it)
+A branded landing page must look like the **brand**, not the designer. So the CLP gets its own
+palette, type, and a deliberately more **immersive, cinematic** register that *contrasts* the
+portfolio's light, calm, editorial frame. Demonstrating you can shift into a separate brand's
+visual language at a high bar is literally the BIL job. The CLP **inherits the frame's
+engineering DNA** (GSAP, easing discipline, a11y, performance) — **not** its skin.
+
+### 7.3 Brand visual system (TIMBRE — distinct from the frame)
+Colour — dark, immersive, premium, with a warm metallic accent (brand-appropriate; this is a
+deliberate branded choice, not the "near-black + acid accent" default — the accent is warm
+champagne, and the register is justified by the product category):
+```
+--tb-bg        #14161A   /* deep ink/graphite — immersive dark base */
+--tb-surface   #1C1F24
+--tb-text      #F2EFE9   /* warm off-white */
+--tb-text-dim  #A7A399
+--tb-accent    #C9A96A   /* warm champagne/brass — the brand accent */
+--tb-accent-hi #E4C98A   /* lighter accent for small text if contrast needs it */
+--tb-line      rgba(242,239,233,0.10)
+```
+Typography — its own voice (both free via `next/font/google`, deliberately different from the
+frame's Bricolage + Inter):
+- **Display: Syne** — distinctive, modern, design-forward; reads premium/confident. 600/700/800.
+- **Body: Manrope** — clean geometric, a touch warmer than Inter. 400/500.
+
+Spacing/rhythm — **more cinematic** than the frame: full-bleed sections, large type, generous
+vertical space between story beats. Same 8px base for internal consistency.
+
+Motion feel + easing — inherits the *discipline*, dials the *drama* up slightly for product
+reveals. Own house curve `cubic-bezier(0.16, 1, 0.3, 1)` (a stronger ease-out for cinematic
+settles), stored as `--tb-ease`, used on every CLP tween. Same calm-but-considered family as
+the frame; nothing bouncy.
+
+### 7.4 Signature interaction (the CLP's memorable moment)
+Carries the frame's idea — *motion with visible intent, always accessible* — expressed for the
+brand:
+1. **Scroll-scrubbed hero product** — the headphones subtly rotate/settle as you scroll the
+   hero (scrubbed to scroll position, not autoplay).
+2. **Variant carousel that re-themes the section** — selecting a colourway swaps the product
+   *and* retints `--tb-accent` for the surrounding section, so the page responds to the choice.
+   Distinctive, brand-appropriate, and it shows off state-driven theming.
+Both **must** have reduced-motion fallbacks (static product; instant variant swap).
+
+### 7.5 Section-by-section (structure · function · responsive · copy)
+Copy below is starter text — refine in place; keep it plain and confident.
+
+1. **Brand hero** — full-bleed dark, product as the focal element, quiet scroll cue.
+   - Copy: headline "Hear the whole picture." · sub "Studio One — wireless over-ear headphones,
+     tuned for people who listen closely."
+   - Motion: scrubbed product settle + gentle text rise on load. Reduced-motion: static hero.
+   - Responsive: product scales; headline `clamp()`; overlay behind text if legibility needs it.
+
+2. **The promise (pinned + scrubbed)** — pinned section; short lines reveal on scrub.
+   - Copy (in sequence): "Forty-hour battery." → "Adaptive noise cancellation." → "Studio-tuned
+     40mm drivers."
+   - Function: ScrollTrigger pin + scrub; each line fades/rises on its segment. Reduced-motion:
+     unpinned, lines stacked and visible. Responsive: shorten pin distance on mobile.
+
+3. **Parallax product moment** — full-bleed layered parallax, one evocative line.
+   - Copy: "Engineered in silence, so every detail survives the noise."
+   - Function: background / product / text at different speeds. Reduced-motion: flat, no parallax.
+
+4. **Features (sticky)** — sticky copy column beside scrolling visuals, three features.
+   - Copy: (a) "Silence on demand — hybrid ANC that adapts to the room." (b) "All day, and then
+     some — 40 hours, 10-minute quick charge." (c) "Made to be worn — memory foam, 250g, balanced
+     clamp."
+   - Function: sticky text, visuals swap as each feature enters view. Reduced-motion: static
+     stacked blocks. Responsive: stacks (visual over copy) on mobile.
+
+5. **Interactive variant carousel (signature)** — colourway selector.
+   - Variants: "Midnight" · "Champagne" · "Slate".
+   - Function: selecting a variant swaps the product and retints the section accent
+     (`--tb-accent`); keyboard-operable (focusable controls + arrow keys), swipe on touch.
+     Reduced-motion: instant swap, no transition.
+
+6. **Closing brand moment** — sign-off + spec CTA + honesty tag + back link.
+   - Copy: "Studio One. Built to disappear, so the music doesn't." · button "Discover" (concept,
+     non-transacting) · small tag "Concept / spec build — fictional brand, by Tarun." ·
+     "← Back to portfolio" link.
+
+### 7.6 A11y & performance (inherited, non-negotiable)
+- Every effect has a `prefers-reduced-motion` fallback; the footer reduced-motion toggle governs
+  the CLP too if the control is shared across routes.
+- Semantic landmarks, keyboard-operable carousel, focus-visible, AA contrast (warm off-white on
+  ink; verify champagne accent for any *text* use — fall back to `--tb-accent-hi` on small text).
+- Lighthouse 100s: lazy-load heavy visuals, `next/image`, code-split the CLP route, kill/revert
+  every ScrollTrigger + Lenis instance on unmount.
+
+---
+
+## 8. Deploy & infrastructure
+
+- **Domain:** `tarunjamana.dev`, registered at **Porkbun**. `.dev` is on the HSTS preload list
+  → HTTPS is mandatory; Vercel auto-provisions the cert, so this is handled automatically.
+- **Connect (simplest path):** add the domain in Vercel → it gives two nameservers → paste
+  those into Porkbun's nameserver field. Vercel then manages DNS and issues HTTPS. No A/CNAME,
+  no proxy toggle. (Auto-renew ON, WHOIS privacy ON at Porkbun.)
+- **Host:** Vercel (Hobby is fine for a personal portfolio — non-commercial). Enable Vercel
+  Analytics.
+- **No AWS.**
+
+---
+
+## 9. Definition of done (quality bar — itself part of the work-sample)
+
+- [ ] Lighthouse 100 / 100 / 100 / 100 (perf / a11y / best-practices / SEO), screenshotted
+- [ ] Keyboard-navigable end to end; visible focus on every interactive element
+- [ ] `prefers-reduced-motion` respected on **every** animation, **and** the footer toggle
+      genuinely disables motion
+- [ ] Smooth on a real mid-range phone; no scroll jank; CLS ≈ 0
+- [ ] Contrast passes WCAG AA on every text/bg pair (warm neutrals + teal verified)
+- [ ] Accent used sparingly (résumé + links + ≤1 hover) — a guest, not a resident
+- [ ] One house easing curve (`--ease`) on every motion; nothing on default `ease`
+- [ ] Fonts via `next/font`, subset, `display: swap` — no layout shift
+- [ ] Résumé one click from both nav and footer
+- [ ] Featured CLP card fully clickable (mouse/tap/keyboard); hover overlay is enhancement only
+- [ ] Three supporting cards are static, not clickable, and don't *look* clickable
+- [ ] Differentiators honest and demonstrated, not asserted
+- [ ] CLP shipped as centrepiece, spec-tagged, clean-room, with its own brand identity
+- [ ] No dangling GSAP/ScrollTrigger/Lenis instances across route changes
+
+---
+
+## 10. Guardrails
+
+- **Restraint is the brief.** "Too cluttered" is the failure mode. Default to the quieter option.
+- **Demonstrate, don't assert** — every element shows the claim rather than stating it.
+- **Honesty/scoping** — no overclaims; client work is describable but not publishable; the CLP
+  is clearly a spec built on real, honestly-framed experience.
+- **The a11y claim must be true** — if any motion can't be made reduced-motion-safe, fix the
+  motion, don't drop the fallback.
+- **AI-assisted workflow is a strength** — this build (chat for design thinking, Claude Code for
+  the build) is exactly the daily-AI-tooling habit the JD wants; be ready to describe it.
+
+---
+
+## 11. Step-wise build plan
+
+Ordered, dependency-aware. Run it top to bottom. Within each phase, follow the **default mode
+from §2**: hand Tarun one small action at a time, wait, verify, then the next. Static structure
+before motion, frame before CLP, so nothing is built on shifting ground. Each phase ends at a
+verify checkpoint — don't advance until it passes.
+
+**Phase 0 — Setup & live pipeline (day one)**
+- Scaffold Next.js (App Router) + TS + Tailwind.
+- Public GitHub repo, clean commits.
+- Connect Vercel, deploy the blank app, enable Vercel Analytics.
+- ✅ Checkpoint: a blank page is live on a `*.vercel.app` URL and redeploys on push. (Custom
+  domain can wait for Phase 7.)
+
+**Phase 1 — Tokens & primitives**
+- Encode every §4 token into `tailwind.config` + CSS vars: colours, 8px spacing scale, the
+  `--ease` curve, radii.
+- Load fonts via `next/font` (Bricolage Grotesque, Inter, JetBrains Mono) — subset, `swap`.
+- Build the shared primitives: the max-width `Container`, the `Button` (résumé/filled variant),
+  base typography.
+- ✅ Checkpoint: a throwaway test page proves tokens, fonts, container, and button all render.
+
+**Phase 2 — Frame shell (chrome, no content yet)**
+- Root layout, shared container, base bg/text tokens.
+- Sticky nav (wordmark, quiet links, filled résumé button, condense-on-scroll, anchor links).
+- Footer (three links, repeated résumé button, reduced-motion toggle placeholder).
+- ✅ Checkpoint: nav sticks/condenses, anchors scroll, footer lays out, all responsive.
+
+**Phase 3 — Frame content, static (no motion)**
+- Hero (weighty left headline, subline, contained column, fold-bait — static).
+- Selected work: featured CLP card (fully clickable, text-left/preview-right, mobile stack) +
+  three static, non-clickable cards (heading + description + tag row).
+- Differentiators band (no header, two columns, calm, generous space).
+- ✅ Checkpoint: the whole frame reads correctly and responsively with zero animation.
+
+**Phase 4 — Signature + motion layer (frame)**
+- Install GSAP + `@gsap/react`, Lenis, Framer Motion.
+- Scroll-progress indicator (whisper-thin teal), reduced-motion toggle (real: toggles motion +
+  honours OS `prefers-reduced-motion`).
+- Entrance reveals (fade + short rise, `--ease`), hero background motion behind the overlay,
+  hover micro-interactions. Wire Lenis to ScrollTrigger.
+- ✅ Checkpoint: motion is calm and smooth, reduced-motion path works, no dangling instances on
+  route change.
+
+**Phase 5 — A11y + performance pass (frame)**
+- Keyboard nav end-to-end, focus-visible, ARIA, contrast checks on every pair.
+- `next/image`, lazy-load below fold, code-split, CLS ≈ 0.
+- ✅ Checkpoint: Lighthouse 100/100/100/100 on the frame, screenshotted.
+
+**Phase 6 — The CLP (`/work/clp`) — its own build (§7)**
+- New route; its own TIMBRE tokens (`--tb-*`) and fonts (Syne + Manrope); its own `--tb-ease`.
+- Build the six sections static first, then layer motion: scrubbed hero → pinned/scrubbed
+  promise → parallax → sticky features → variant carousel (signature) → closing.
+- Reduced-motion fallback on every effect; a11y + perf pass; Lighthouse 100s on the route.
+- ✅ Checkpoint: CLP is a complete, accessible, performant scroll experience, spec-tagged, with a
+  back-to-portfolio link.
+
+**Phase 7 — Content, polish, ship**
+- Real copy (hero, the three project descriptions, the two differentiator sentences), résumé PDF
+  in place, OG image + SEO meta.
+- Custom domain: paste Vercel's two nameservers into Porkbun; confirm HTTPS issues.
+- Make the GitHub repo presentable (this site's code lives there).
+- Final Lighthouse screenshot; cross-browser + real mid-range mobile smoke test.
+- ✅ Checkpoint: `tarunjamana.dev` is live, fast, accessible, and the résumé is one click from
+  nav and footer. Ship.

@@ -1,5 +1,6 @@
 import { Container } from "@/components/ui/Container";
 import { LinkButton } from "@/components/ui/Button";
+import { ReducedMotionToggle } from "@/components/ReducedMotionToggle";
 
 const links = [
   { href: "https://www.linkedin.com/in/jamana-tarun-a5176a168", label: "LinkedIn" },
@@ -17,7 +18,7 @@ export function Footer() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  className="font-sans text-sm text-text-secondary transition-colors ease-house duration-300 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  className="font-sans text-sm text-text-secondary transition-colors ease-house duration-150 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   {link.label}
                 </a>
@@ -43,13 +44,7 @@ export function Footer() {
               </svg>
             </LinkButton>
 
-            <button
-              type="button"
-              aria-pressed={false}
-              className="font-mono text-xs text-text-muted transition-colors ease-house duration-300 hover:text-text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              reduced motion · off
-            </button>
+            <ReducedMotionToggle />
           </div>
         </div>
       </Container>

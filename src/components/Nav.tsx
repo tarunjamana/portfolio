@@ -46,7 +46,7 @@ export function Nav() {
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="font-sans text-sm text-text-secondary transition-colors ease-house duration-300 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                    className="font-sans text-sm text-text-secondary transition-colors ease-house duration-150 hover:text-text focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   >
                     {link.label}
                   </a>
