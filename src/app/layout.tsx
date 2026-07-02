@@ -26,10 +26,29 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const title = "Tarun Jamana";
+const description =
+  "Web experiences that resonate. Engineered to be fast, accessible, and measured.";
+
 export const metadata: Metadata = {
-  title: "Tarun Jamana",
-  description:
-    "Web experiences that resonate. Engineered to be fast, accessible, and measured.",
+  metadataBase: new URL("https://tarunjamana.dev"),
+  title: {
+    default: title,
+    template: "%s | Tarun Jamana",
+  },
+  description,
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    siteName: "Tarun Jamana",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({
