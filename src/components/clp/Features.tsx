@@ -34,9 +34,9 @@ function SimpleStack() {
             className="h-40 w-40 shrink-0"
           />
           <div className="flex flex-col gap-2">
-            <h3 className="font-tb-display text-2xl font-semibold text-tb-text">
+            <h2 className="font-tb-display text-2xl font-semibold text-tb-text">
               {feature.title}
-            </h3>
+            </h2>
             <p className="font-tb-body text-base text-tb-text-dim">
               {feature.description}
             </p>
@@ -75,9 +75,9 @@ function StickyFeatures() {
               className="absolute inset-0 flex flex-col justify-center gap-2 transition-opacity ease-tb-house duration-500"
               style={{ opacity: active === i ? 1 : 0 }}
             >
-              <h3 className="font-tb-display text-3xl font-semibold text-tb-text">
+              <h2 className="font-tb-display text-3xl font-semibold text-tb-text">
                 {feature.title}
-              </h3>
+              </h2>
               <p className="font-tb-body text-base text-tb-text-dim">
                 {feature.description}
               </p>

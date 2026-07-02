@@ -9,6 +9,7 @@ export default function Home() {
   return (
     <>
       <ScrollProgress />
+      <div id="top" />
       <Nav />
       <main id="main-content" className="flex-1">
         <Hero />

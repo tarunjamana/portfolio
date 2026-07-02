@@ -22,7 +22,6 @@ export function Nav() {
 
   return (
     <header
-      id="top"
       className={`sticky top-0 z-50 bg-bg/90 backdrop-blur transition-all ease-house duration-300 ${
         condensed ? "border-b border-border" : "border-b border-transparent"
       }`}
