@@ -17,6 +17,7 @@ export function Headphones({ color = "#C9A96A", className }: HeadphonesProps) {
         stroke={color}
         strokeWidth="6"
         strokeLinecap="round"
+        className="transition-colors duration-500 ease-tb-house"
       />
       <rect
         x="26"
@@ -28,6 +29,7 @@ export function Headphones({ color = "#C9A96A", className }: HeadphonesProps) {
         opacity="0.15"
         stroke={color}
         strokeWidth="4"
+        className="transition-colors duration-500 ease-tb-house"
       />
       <rect
         x="146"
@@ -39,9 +41,22 @@ export function Headphones({ color = "#C9A96A", className }: HeadphonesProps) {
         opacity="0.15"
         stroke={color}
         strokeWidth="4"
+        className="transition-colors duration-500 ease-tb-house"
       />
-      <circle cx="40" cy="120" r="4" fill={color} />
-      <circle cx="160" cy="120" r="4" fill={color} />
+      <circle
+        cx="40"
+        cy="120"
+        r="4"
+        fill={color}
+        className="transition-colors duration-500 ease-tb-house"
+      />
+      <circle
+        cx="160"
+        cy="120"
+        r="4"
+        fill={color}
+        className="transition-colors duration-500 ease-tb-house"
+      />
     </svg>
   );
 }

@@ -44,21 +44,27 @@ export function VariantCarousel() {
 
   return (
     <section
-      className="flex min-h-screen flex-col items-center justify-center gap-10 px-6 py-24 text-center"
+      className="relative flex min-h-screen flex-col items-center justify-center gap-10 overflow-hidden px-6 py-24 text-center"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <h2 className="font-tb-display text-2xl font-semibold text-tb-text">
+      <div
+        aria-hidden="true"
+        className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl transition-colors duration-500 ease-tb-house"
+        style={{ backgroundColor: activeColor, opacity: 0.2 }}
+      />
+
+      <h2 className="relative font-tb-display text-2xl font-semibold text-tb-text">
         Choose your colorway
       </h2>
 
-      <Headphones color={activeColor} className="h-72 w-72" />
+      <Headphones color={activeColor} className="relative h-72 w-72" />
 
       <div
         role="radiogroup"
         aria-label="Colorway"
         onKeyDown={onKeyDown}
-        className="flex items-center gap-4"
+        className="relative flex items-center gap-4"
       >
         {variants.map((variant, i) => (
           <button
