@@ -12,6 +12,15 @@
   --accent-hover: #174a44;
   --accent-tint: rgba(30, 95, 87, 0.08);
   --radius: 8px;
+
+  /* TIMBRE (CLP) brand tokens — §7.3, scoped to /work/clp only via tb-* utilities */
+  --tb-bg: #14161a;
+  --tb-surface: #1c1f24;
+  --tb-text: #f2efe9;
+  --tb-text-dim: #a7a399;
+  --tb-accent: #c9a96a;
+  --tb-accent-hi: #e4c98a;
+  --tb-line: rgba(242, 239, 233, 0.1);
 }
 
 @theme inline {
@@ -30,6 +39,17 @@
   --font-mono: var(--font-jetbrains-mono);
   --ease-house: cubic-bezier(0.22, 1, 0.36, 1);
   --radius-house: var(--radius);
+
+  --color-tb-bg: var(--tb-bg);
+  --color-tb-surface: var(--tb-surface);
+  --color-tb-text: var(--tb-text);
+  --color-tb-text-dim: var(--tb-text-dim);
+  --color-tb-accent: var(--tb-accent);
+  --color-tb-accent-hi: var(--tb-accent-hi);
+  --color-tb-line: var(--tb-line);
+  --font-tb-display: var(--font-syne);
+  --font-tb-body: var(--font-manrope);
+  --ease-tb-house: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body {
